@@ -11,13 +11,18 @@ function isDevProxy(): boolean {
 }
 
 export async function resolveApiBase(): Promise<string> {
-  if (cachedBase) return cachedBase;
+  if (cachedBase !== undefined) return cachedBase;
   const envBase = (import.meta as { env?: { VITE_API_BASE?: string } }).env?.VITE_API_BASE;
   if (envBase) {
     cachedBase = envBase;
     return cachedBase;
   }
   if (isDevProxy()) {
+    cachedBase = "";
+    return cachedBase;
+  }
+  // Browser production (nginx / vite proxy): same-origin relative /v1/*
+  if (typeof window !== "undefined") {
     cachedBase = "";
     return cachedBase;
   }
