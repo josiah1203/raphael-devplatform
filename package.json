@@ -1,0 +1,7 @@
+{
+  "name": "@hummingbird/raphael-devplatform",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Raphael Platform SDKs and developer tools",
+  "workspaces": ["packages/*"]
+}
