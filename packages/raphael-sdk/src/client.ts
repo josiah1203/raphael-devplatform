@@ -54,8 +54,14 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(`${base}${path}`, { ...init, headers });
   if (!res.ok) {
     const err = await res.json().catch(() => ({ error: res.statusText }));
-    const message = (err as { error?: string; message?: string }).error ?? (err as { message?: string }).message ?? `HTTP ${res.status}`;
-    throw new Error(message);
+    const detail = (err as { detail?: unknown }).detail;
+    let message = (err as { error?: string; message?: string }).error ?? (err as { message?: string }).message;
+    if (!message && Array.isArray(detail)) {
+      message = detail.map((d: { msg?: string }) => d.msg).filter(Boolean).join("; ");
+    } else if (!message && typeof detail === "object" && detail && "error" in detail) {
+      message = String((detail as { error: string }).error);
+    }
+    throw new Error(message ?? `HTTP ${res.status}`);
   }
   if (res.status === 204) return undefined as T;
   return res.json() as Promise<T>;
