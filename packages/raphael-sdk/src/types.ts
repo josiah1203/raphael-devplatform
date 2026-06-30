@@ -4,6 +4,8 @@ export type PlatformConfig = {
   mode: string;
   platform_name?: string;
   version?: string;
+  deployment_mode?: string;
+  cloud_connected?: boolean;
   features?: { reviews: boolean; automations: boolean; connectors: boolean; intelligence?: boolean };
 };
 

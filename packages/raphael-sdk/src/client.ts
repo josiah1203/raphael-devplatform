@@ -475,6 +475,10 @@ export const orgs = {
       method: "PATCH",
       body: JSON.stringify(settings),
     }),
+  getSettings: (orgId: string) =>
+    request<{ org_id: string; sso_url?: string; sso_entity?: string; enforce_sso?: boolean }>(
+      `/v1/orgs/${encodeURIComponent(orgId)}/settings`,
+    ),
 };
 
 export const admin = {
@@ -539,6 +543,13 @@ export const rwu = {
       method: "POST",
       body: JSON.stringify({ amount, reason: reason ?? "usage" }),
     }),
+  getDailyAllocation: () =>
+    request<{
+      org_id: string;
+      daily_limit: number;
+      available: number;
+      ledger: { date: string; type: string; amount: string; balance: string; description: string }[];
+    }>("/v1/rwu/daily"),
 };
 
 export const sync = {
